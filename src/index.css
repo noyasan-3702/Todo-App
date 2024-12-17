@@ -1,0 +1,364 @@
+/*================================================================================*/
+/* 全体のレイアウト*/
+html,body {
+  height: 100%;
+}
+body {
+  background: #0f3854;
+  background: radial-gradient(ellipse at center,  #0a2e38  0%, #000000 70%);
+  background-size: 100%;
+}
+
+.Todo-container {
+  text-align: center;
+  color: #daf6ff;
+  text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
+}
+
+
+/*================================================================================*/
+/* ヘッター部分のレイアウト */
+.header-area {
+  border-radius: 10px;
+  position: fixed; /* ヘッダーを固定する */
+  top: 20px; 
+  left: 0;
+  width: 100%;
+}
+
+/* タイトルのレイアウト*/
+.Title {
+  text-align:left;
+  width: 25%;
+  margin-top: 0;
+  margin-left: 20px;
+  margin-bottom: 0;
+  color: #ffffff;
+}
+
+/* 中身のレイアウト*/
+.body-area {
+  margin-top: 190px;
+}
+
+/*================================================================================*/
+/* 時計のレイアウト */
+.clock-area {
+  text-align: center;
+  color: #ffffff; /* デジタルグリーン */
+}
+
+.time-display {
+  font-size: 65px; /* 時刻のサイズ */
+  font-weight: bold;
+  color: #ffffff; /* 時計の色 */
+  text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
+}
+
+.date-display {
+  font-size: 24px; /* 日付のサイズ */
+  color: #ffffff; /* 日付の色 */
+  text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
+}
+
+/*================================================================================*/
+
+/*================================================================================*/
+/* お問い合わせフォームのレイアウト */
+.foam-area {
+  display:flex;
+  flex-wrap: wrap;
+  margin:0 auto;
+  width: 500px;
+  letter-spacing: 0.03rem;
+}
+
+/* 入力欄のレイアウト */
+.input-area1 {
+  margin:5px auto;
+  width:50%;
+}
+.input-area2 {
+  margin:5px auto;
+  width:50%;
+}
+.input-area3 {
+  margin:5px auto;
+  width:100%;
+}
+
+.input-area1 h3 {
+  color: #ffffff;
+  text-align:left;
+  margin-bottom: 5px;
+}
+.input-area2 h3 {
+  color: #ffffff;
+  text-align:left;
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+.input-area3 h3 {
+  color: #ffffff;
+  text-align:left;
+  margin-bottom: 5px;
+}
+
+.input1 {
+  float: left;
+  width:90%;
+  padding:1em;
+  color: #000000;
+  margin-left:0;
+}
+.input2 {
+  float: right;
+  width:80%;
+  padding:1em;
+  color: #000000;
+  margin-left:0;
+}
+.input3 {
+  float: left;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 1em;
+  color: #000000;
+}
+
+
+/*================================================================================*/
+/* ポップアップのレイアウト */
+.popup-area {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* ポップアップ本体 */
+.popup {
+  color: #000;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-shadow: none;
+}
+
+/* 閉じるボタン */
+.closebtn {
+  margin-top: -15px;
+  margin-right: -15px;
+  color: #ffffff;
+  background: #ff0000;
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+.closebtn:hover,
+.closebtn:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sendbtn {
+  margin-top: 20px;
+  padding: 10px 15px;
+  font-size: 14px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.sendbtn:hover {
+  background: #0056b3;
+}
+.sendbtn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
+
+/* エラーメッセージ用のスタイル */
+.error-message1 {
+  color: red;
+  font-weight: bold;
+  text-align:left;
+}
+.error-message2 {
+  color: red;
+  font-weight: bold;
+  text-align:left;
+  margin-left: 20px;
+}
+.error-message3 {
+  color: red;
+  font-weight: bold;
+  text-align:left;
+}
+
+/* ポップアップ内ののスタイル */
+.popup-input-area {
+  margin: 10px 0;
+}
+.popup-input-area  h4 {
+  text-align:left;
+  margin-left: 25px;
+  margin-bottom: 5px;
+}
+.popup-input {
+  width: 90%;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #d4d4d4;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+.popup-textarea {
+  resize: vertical;
+  min-height: 25px;
+  max-height: 100px;
+  width: 90%;
+  padding: 8px;
+  border-radius: 5px;
+  background-color: #d4d4d4;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+}
+
+/* エラー時のスタイル */
+.error-field {
+  background-color: #ffe6e6;
+  border: 1px solid red;
+}
+.popup-input.error-field {
+  background-color: #ffe6e6;
+  border: 1px solid red;
+}
+
+/*================================================================================*/
+/* 一覧のレイアウト */
+.list-area {
+  text-align: center;
+  color: #ffffff; /* デジタルグリーン */
+}
+
+/* テーブルのレイアウト */
+.Todolist {
+  border-collapse: separate; /* セルの境界線を分離 */
+  border-spacing: 0; /* セル間のスペースをなくす */
+  border-radius: 10px; /* テーブル全体の角を丸くする */
+  overflow: hidden; /* 丸角の外にはみ出る部分を隠す */
+  background: #ffffff; /* 背景色は『白』 */
+  width: 100%;
+  height: auto;
+}
+
+.Situation {
+  list-style:none;
+  color: #000;
+  background: #53ff5c;
+  padding: 20px;
+  border-radius: 10px;
+  text-shadow: none;
+  font-weight: bold;
+}
+
+.list-0 {
+  list-style:none;
+  color: #000;
+  background: #e4e4e4;
+  border-radius: 10px;
+  text-shadow: none;
+}
+
+.list-1 {
+  list-style:none;
+  color: #000;
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  text-shadow: none;
+}
+
+.no {
+  text-align: center;
+  width: 7%;
+}
+
+.task {
+  text-align: center;
+  width: auto;
+}
+
+.day {
+  text-align: left;
+  width: 20%;
+}
+
+.Action {
+  text-align: center;
+  width: 15%;
+}
+
+/*================================================================================*/
+/* ボタンのレイアウト */
+.btn-text {
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.btn0 {
+  font-weight: bold;
+  font-size: 20px;
+  padding: 10px 20px;
+  margin: 0 50px;
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.btn0:hover {
+  background-color: #0056b3;
+}
+
+.btn0:active {
+  transform: scale(0.95);
+}
+
+.btn {
+  font-weight: bold;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin: 5px 0px 5px 0px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
