@@ -15,6 +15,91 @@ body {
   text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
 }
 
+/*================================================================================*/
+
+/* メニューボタンのレイアウト */
+#btn_menu {
+	position: relative;
+	display: flex;
+  text-align: right;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	width: 25px;
+	height: 25px;
+	box-sizing: border-box;
+	background-color: #a3a3a3;
+	transition: background-color 0.3s ease;
+  border: none;
+  border-radius: 10px;
+}
+#btn_menu::before {
+	position: absolute;
+	top: calc(50% - 1px);
+	left: 25%;
+	display: block;
+	content: "";
+	width: 50%;
+	height: 2px;
+	background: #f7f7f7;
+	opacity: 0;
+	transform: rotate(45deg);
+	transition: opacity 0.3s ease;
+}
+#btn_menu span {
+	display: block;
+	position: absolute;
+	top: 25%;
+	left: 25%;
+	width: 50%;
+	height: 50%;
+	opacity: 1;
+	transition: opacity 0.3s ease;
+}
+#btn_menu span::before,
+#btn_menu span span, #btn_menu span::after {
+	position: absolute;
+	top: 12%;
+	left: 0;
+	display: block;
+	content: "";
+	width: 100%;
+	height: 2px;
+	background: #f7f7f7;
+	transition: opacity 0.3s ease;
+}
+#btn_menu span span {
+	top: calc(50% - 1px);
+}
+#btn_menu span::after {
+	top: auto;
+	bottom: 12%;
+}
+#btn_menu::after {
+	position: absolute;
+	top: calc(50% - 1px);
+	left: 25%;
+	display: block;
+	content: "";
+	width: 50%;
+	height: 2px;
+	background: #f7f7f7;
+	opacity: 0;
+	transform: rotate(-45deg);
+	transition: opacity 0.3s ease;
+}
+#btn_menu:hover {
+	background-color: #555;
+}
+#btn_menu.active::before {
+	opacity: 1;
+}
+#btn_menu.active span {
+	opacity: 0;
+}
+#btn_menu.active::after {
+	opacity: 1;
+}
 
 /*================================================================================*/
 /* ヘッター部分のレイアウト */
@@ -38,7 +123,7 @@ body {
 
 /* 中身のレイアウト*/
 .body-area {
-  margin-top: 190px;
+  margin-top: 270px;
 }
 
 /*================================================================================*/
@@ -46,6 +131,7 @@ body {
 .clock-area {
   text-align: center;
   color: #ffffff; /* デジタルグリーン */
+  margin-bottom: 30px;
 }
 
 .time-display {
@@ -155,17 +241,18 @@ body {
 
 /* 閉じるボタン */
 .closebtn {
-  margin-top: -15px;
-  margin-right: -15px;
+  margin-top: -4px;
+  margin-right: 0px;
   color: #ffffff;
   background: #ff0000;
   float: right;
-  font-size: 20px;
+  font-size: 15px;
   font-weight: bold;
   cursor: pointer;
   border: none;
 }
 .closebtn:hover,
+
 .closebtn:focus {
   color: #000;
   text-decoration: none;
@@ -191,23 +278,6 @@ body {
   cursor: not-allowed;
 }
 
-/* エラーメッセージ用のスタイル */
-.error-message1 {
-  color: red;
-  font-weight: bold;
-  text-align:left;
-}
-.error-message2 {
-  color: red;
-  font-weight: bold;
-  text-align:left;
-  margin-left: 20px;
-}
-.error-message3 {
-  color: red;
-  font-weight: bold;
-  text-align:left;
-}
 
 /* ポップアップ内ののスタイル */
 .popup-input-area {
@@ -252,65 +322,154 @@ body {
 /* 一覧のレイアウト */
 .list-area {
   text-align: center;
-  color: #ffffff; /* デジタルグリーン */
+  color: #ffffff;
+  display: flex;
+  flex-wrap: wrap; /* 折り返したいんだ！ */
 }
 
-/* テーブルのレイアウト */
-.Todolist {
-  border-collapse: separate; /* セルの境界線を分離 */
-  border-spacing: 0; /* セル間のスペースをなくす */
+.taskmanager {
+  width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
   border-radius: 10px; /* テーブル全体の角を丸くする */
-  overflow: hidden; /* 丸角の外にはみ出る部分を隠す */
-  background: #ffffff; /* 背景色は『白』 */
-  width: 100%;
-  height: auto;
-}
-
-.Situation {
-  list-style:none;
-  color: #000;
-  background: #53ff5c;
-  padding: 20px;
-  border-radius: 10px;
-  text-shadow: none;
-  font-weight: bold;
-}
-
-.list-0 {
-  list-style:none;
-  color: #000;
-  background: #e4e4e4;
-  border-radius: 10px;
-  text-shadow: none;
-}
-
-.list-1 {
-  list-style:none;
-  color: #000;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  text-shadow: none;
-}
-
-.no {
-  text-align: center;
-  width: 7%;
+  padding: 5px;
 }
 
 .task {
+  width : 100%;
+  list-style: none;  /* リストマーク（・）を消す */
+  margin: 5px 5px 55px 5px;
+}
+
+/* Todoリストのレイアウト */
+.Todocell {
+  border: none; /* 枠線なし */
+  border-radius: 10px; /* 角丸にする */
+  overflow: hidden; /* 丸角の外にはみ出る部分を隠す */
+  background: none; /* 背景色は『なし』 */
+  padding: 0;
+  height: auto;
+}
+
+/* Todoリストの進捗状況のレイアウト */
+.Situation-green {
+  color: #000;
+  background: #53ff5c;
+  padding: 5px;
   text-align: center;
-  width: auto;
+  text-shadow: none;
+  font-weight: bold;
+  display: flex;
+}
+.Situation-red {
+  color: #000;
+  background: #ff6753;
+  padding: 5px;
+  text-align: center;
+  text-shadow: none;
+  font-weight: bold;
+  display: flex;
+}
+.Situation-blue {
+  color: #000;
+  background: #53c0ff;
+  padding: 5px;
+  text-align: center;
+  text-shadow: none;
+  font-weight: bold;
+  display: flex;
+}
+.Situation-Title {
+  flex: 2;
+  text-align: center;
+  margin-left: 25px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Todoリストの内部のレイアウト */
+.list-1 {
+  color: #000;
+  background: #fff;
+  padding: 5px;
+  text-shadow: none;
+  display: grid;
+  grid-template-rows: 50px 1fr;
+  grid-template-columns: 100%;
+  height: auto;
+}
+
+.taskname-input {
+  display: flex;
+}
+.taskname-input input {
+  border:none;
+  outline:0;
+}
+
+.taskname {
+  margin-left: 15px;
+  width: 100%;
+  text-align: left;
 }
 
 .day {
+  margin-left: 15px;
+  width: 100%;
   text-align: left;
-  width: 20%;
+}
+.list-1 .day-input {
+  float: left;
+  margin-left: 50px;
+}
+/*================================================================================*/
+/* チェックボックスのレイアウト */
+.my-taskcheck {
+  display: block;
+  position: relative;
+  margin: 1em 0;
+  padding-left: 28px;
+  cursor: pointer;
+  user-select: none; /* テキストの選択を防ぐ */
+}
+/* inputは非表示にする */
+.my-taskcheck input {
+  display: none;
 }
 
-.Action {
-  text-align: center;
-  width: 15%;
+/* □ */
+.checkmark {
+  position: absolute;
+  top: 0px; /* 上からの位置 */
+  left: 10px;
+  height: 22px; /* 大きさ */
+  width: 22px; /* 大きさ */
+  border: solid 2px #d4dae2; /* 線 */
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* ✓ */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  left: 5px; /* チェックの位置 */
+  top: 1px; /* チェックの位置 */
+  width: 6px; /* チェックの大きさ */
+  height: 10px; /* チェックの大きさ */
+  border: solid #FFF;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0; /* 透明にしておく */
+}
+
+/* チェックが入ったときの□ */
+.my-taskcheck input:checked + .checkmark {
+  background: #2e80ff; /* チェック時の色 */
+  border-color: #2e80ff; /* チェック時の色 */
+}
+
+/* チェックが入ったときの✓ */
+.my-taskcheck input:checked + .checkmark:after {
+  opacity: 1; /* 透明を解除 */
 }
 
 /*================================================================================*/

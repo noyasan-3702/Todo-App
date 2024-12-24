@@ -49,23 +49,25 @@ function App() {
             <div className="time-display">{formatTime(time)}</div>
             <div className="date-display">{formatDate(time)}</div>
           </div>
+          <nav>
+            <Link to="/Do">
+              <button className="btn0">今日やることぉ</button>
+            </Link>
+            <Link to="/List">
+              <button className="btn0">いちらぁん</button>
+            </Link>
+            <Link to="/Fin">
+              <button className="btn0">おわったやつら</button>
+            </Link>
+          </nav>
         </div>
-        <nav className="body-area">
-          <Link to="/Do">
-            <button className="btn0">今日やることぉ</button>
-          </Link>
-          <Link to="/List">
-            <button className="btn0">いちらぁん</button>
-          </Link>
-          <Link to="/Fin">
-            <button className="btn0">おわったやつら</button>
-          </Link>
-        </nav>
-        <Routes>
-          <Route path="/Do" element={<Do />} />
-          <Route path="/List" element={<List />} />
-          <Route path="/Fin" element={<Fin />} />
-        </Routes>
+        <div className="body-area">
+          <Routes>
+            <Route path="/Do" element={<Do />} />
+            <Route path="/List" element={<List />} />
+            <Route path="/Fin" element={<Fin />} />
+          </Routes>
+        </div>
       </div>
     </Router>
     </>
