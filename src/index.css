@@ -123,7 +123,7 @@ body {
 
 /* 中身のレイアウト*/
 .body-area {
-  margin-top: 270px;
+  margin-top: 200px;
 }
 
 /*================================================================================*/
@@ -147,7 +147,6 @@ body {
   text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
 }
 
-/*================================================================================*/
 
 /*================================================================================*/
 /* お問い合わせフォームのレイアウト */
@@ -243,6 +242,7 @@ body {
 .closebtn {
   margin-top: -4px;
   margin-right: 0px;
+  padding: auto auto;
   color: #ffffff;
   background: #ff0000;
   float: right;
@@ -250,6 +250,7 @@ body {
   font-weight: bold;
   cursor: pointer;
   border: none;
+  border-radius: 10px;
 }
 .closebtn:hover,
 
@@ -401,11 +402,15 @@ body {
   display: flex;
 }
 .taskname-input input {
+  margin-top: 5px;
+  margin-left: 15px;
   border:none;
   outline:0;
+  height: 25px;
 }
 
 .taskname {
+  margin-top: -10px;
   margin-left: 15px;
   width: 100%;
   text-align: left;
@@ -416,10 +421,46 @@ body {
   width: 100%;
   text-align: left;
 }
-.list-1 .day-input {
-  float: left;
-  margin-left: 50px;
+
+/*================================================================================*/
+/* カレンダー(日付選択)のレイアウト */
+.my-datechoice {
+  display: block;
+  position: relative;
+  margin: 1em 0;
+  cursor: pointer;
+  user-select: none; /* テキストの選択を防ぐ */
 }
+
+.day-input-icon {
+  position: absolute;
+  top: -15px; /* 上からの位置 */
+  left: 8px;
+}
+
+.react-datepicker-wrapper {
+  position: absolute;
+  top: -15px; /* 上からの位置 */
+  left: 43px;
+}
+.react-datepicker__input-container {
+  height: 50px;
+}
+.react-datepicker-popper {
+  position: absolute;
+  z-index: 9999; /* 他の要素に隠れないよう調整 */
+  top: 15px;        /* 必要に応じて位置を調整 */
+  left: 0;
+}
+
+.day-input {
+  border:none;
+  outline:0;
+  cursor: pointer;
+  margin-top: 2px;
+  font-size: 20px;
+}
+
 /*================================================================================*/
 /* チェックボックスのレイアウト */
 .my-taskcheck {
@@ -438,7 +479,7 @@ body {
 /* □ */
 .checkmark {
   position: absolute;
-  top: 0px; /* 上からの位置 */
+  top: -10px; /* 上からの位置 */
   left: 10px;
   height: 22px; /* 大きさ */
   width: 22px; /* 大きさ */
