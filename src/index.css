@@ -337,16 +337,25 @@ body {
   flex-wrap: wrap; /* 折り返したいんだ！ */
 }
 
-.taskmanager {
+.taskmanager1 {
   width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
   border-radius: 10px; /* テーブル全体の角を丸くする */
-  padding: 5px;
+  padding: 0px;
+  margin-left: -15px;
+  margin-right: 15px;
+}
+.taskmanager2 {
+  width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
+  border-radius: 10px; /* テーブル全体の角を丸くする */
+  padding: 0px;
+  margin-left: 38px;
+  margin-right: -35px;
 }
 
 .task {
   width : 100%;
   list-style: none;  /* リストマーク（・）を消す */
-  margin: 5px 5px 30px 5px;
+  margin-bottom: 30px;
 }
 
 /* Todoリストのレイアウト */

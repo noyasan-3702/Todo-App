@@ -50,11 +50,6 @@ function App() {
       setFormDataList(data);
   }, []);
 
-/*================================================================================*/
-  // ポップアップ処理 //
-  const openPopup = () => {setIsPopupVisible(true)};    // ポップアップを開く
-  const closePopup = () => {setIsPopupVisible(false)};  // ポップアップを閉じる
-
   /*================================================================================*/
   // カレンダーPopup //
   
@@ -63,6 +58,11 @@ function App() {
         task.id === id ? { ...task, endday: date ? date.toISOString() : null } : task
     ));
 };
+/*================================================================================*/
+  // 新規作成Popup //
+
+  const openAddPopup = () => {setIsPopupVisible(true)};    // ポップアップを開く
+  const closeAddPopup = () => {setIsPopupVisible(false)};  // ポップアップを閉じる
 
 /*================================================================================*/
   // タスク処理 //
@@ -114,7 +114,7 @@ function App() {
             <div className="time-display">{formatTime(time)}</div>
             <div className="date-display">{formatDate(time)}</div>
           </div>
-          <button className="btn0" onClick={openPopup}>タスクを追加</button>
+          <button className="btn0" onClick={openAddPopup}>タスクを追加</button>
           <div className="Title-area" >
             <h3>To Do</h3>
             <h3>Complete</h3>
@@ -122,135 +122,141 @@ function App() {
         </div>
         <div className="body-area">
           <div className="list-area">
-              {/* 進行中エリア */}
-              <ul className="taskmanager">
-                  {/* task新規作成Popup */}
-                  {isPopupVisible && (
-                      <li className="task">
-                          <div className="Todocell">
-                              <div className="Situation-green">
-                                  <h4 className="Situation-Title">新しいタスクの作成</h4>
-                                  <button className="closebtn" onClick={closePopup}>✕</button>
-                              </div>
-                              <div className="list-1">
-                                  <div className="taskname-input">
-                                      <label className="my-taskcheck">
-                                          <input 
-                                            type="checkbox" 
-                                            className="taskcheck"
-                                          />
-                                          <span className="checkmark"></span>
-                                      </label>
-                                      <input 
-                                        className="taskname" 
-                                        placeholder="タスク名を入力"
-                                        value={newTaskName}
-                                        onChange={(e) => setNewTaskName(e.target.value)}
-                                      />
-                                  </div>
-                                  <label className="my-datechoice">
-                                    <IconContext.Provider value={{ size: '25px' }}>
-                                      <FaRegCalendarAlt className="day-input-icon" />
-                                    </IconContext.Provider>
-                                    <DatePicker
-                                        className="day-input"
-                                        dateFormat="yyyy/MM/dd"
-                                        selected={selectedDate}
-                                        onChange={(date) => setSelectedDate(date)}
-                                        locale="ja"
-                                        placeholderText="日付を選択"
-                                        portalId="root" // 必須: ポップアップがbody直下に配置される
-                                        popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
-                                        popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
-                                      />
-                                  </label>
-                                  <button onClick={handleAddTask}>登録</button>
-                              </div>
-                          </div>
-                      </li>
-                  )}
-                  {/* 入力内容をループで表示 */}
-                  {todoTasks.map(data => (
-                  <li className="task" key={data.id}>
-                      <div className="Todocell">
-                          {/* 進捗バー */}
-                          <div className="Situation-green">
-                              <h4 className="Situation-Title">進行中</h4>
-                              <button id="btn_menu" className="btn_menu">
-                                  <span><span></span></span>
-                              </button>
-                          </div>
-                          {/* 内容 */}
-                          <div className="list-1">
-                              <label className="my-taskcheck">
-                                  <input 
-                                    type="checkbox" 
-                                    className="taskcheck"
-                                    onChange={() => handleCompleteTask(data.id)}
-                                    checked={data.completed}
-                                  />
-                                  <span className="checkmark"></span>
-                                  <div className="taskname">{data.taskname}</div>
-                              </label>
-                              <label className="my-datechoice">
-                                <IconContext.Provider value={{ size: '25px' }}>
-                                  <FaRegCalendarAlt className="day-input-icon" />
-                                </IconContext.Provider>
-                                <DatePicker
-                                    className="day-input"
-                                    selected={data.endday ? new Date(data.endday) : null}
-                                    onChange={(date) => handleDateChange(date, data.id)}
-                                    dateFormat="yyyy/MM/dd"
-                                    placeholderText="日付を選択"
-                                    portalId="root" // 必須: ポップアップがbody直下に配置される
-                                    popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
-                                    popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
-                                  />
-                              </label>
-                          </div>
+            {/* メニュー 
+            <div>
+              <button>編集</button>
+              <button>削除</button>
+            </div>
+            */}
+            {/* 進行中エリア */}
+            <ul className="taskmanager1">
+              {/* task新規作成Popup */}
+              {isPopupVisible && (
+                <li className="task">
+                  <div className="Todocell">
+                    <div className="Situation-green">
+                      <h4 className="Situation-Title">新しいタスクの作成</h4>
+                      <button className="closebtn" onClick={closeAddPopup}>✕</button>
+                    </div>
+                    <div className="list-1">
+                      <div className="taskname-input">
+                        <label className="my-taskcheck">
+                          <input 
+                            type="checkbox" 
+                            className="taskcheck"
+                          />
+                          <span className="checkmark"></span>
+                        </label>
+                        <input 
+                          className="taskname" 
+                          placeholder="タスク名を入力"
+                          value={newTaskName}
+                          onChange={(e) => setNewTaskName(e.target.value)}
+                        />
                       </div>
-                  </li>
-                ))}
-              </ul>
-              {/* 完了済エリア */}
-              <ul className="taskmanager">
-                  {completedTasks.map(data => (
-                    <li className="task" key={data.id}>
-                        <div className="Todocell">
-                            {/* 進捗バー */}
-                            <div className="Situation-blue">
-                                <h4 className="Situation-Title">完了済み</h4>
-                                <button id="btn_menu" className="btn_menu">
-                                    <span><span></span></span>
-                                </button>
-                            </div>
-                            {/* 内容 */}
-                            <div className="list-1">
-                                <label className="my-taskcheck">
-                                    <input 
-                                      type="checkbox" 
-                                      className="taskcheck"
-                                      onChange={() => handleCompleteTask(data.id)}
-                                      checked={data.completed}
-                                    />
-                                    <span className="checkmark"></span>
-                                    <div className="taskname">{data.taskname}</div>
-                                </label>
-                                <label className="my-datechoice">
-                                  <IconContext.Provider value={{ size: '25px' }}>
-                                    <FaRegCalendarAlt className="day-input-icon" />
-                                  </IconContext.Provider>
-                                </label>
-                                {data.endday && (
-                                  <div className="endday">
-                                    {new Date(data.endday).toLocaleDateString("ja-JP")}
-                                  </div>
-                                )}
-                            </div>
-                        </div>
-                    </li>
-                  ))}
-              </ul>
+                      <label className="my-datechoice">
+                        <IconContext.Provider value={{ size: '25px' }}>
+                          <FaRegCalendarAlt className="day-input-icon" />
+                        </IconContext.Provider>
+                        <DatePicker
+                            className="day-input"
+                            dateFormat="yyyy/MM/dd"
+                            selected={selectedDate}
+                            onChange={(date) => setSelectedDate(date)}
+                            locale="ja"
+                            placeholderText="日付を選択"
+                            portalId="root" // 必須: ポップアップがbody直下に配置される
+                            popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
+                            popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
+                          />
+                      </label>
+                      <button onClick={handleAddTask}>登録</button>
+                    </div>
+                  </div>
+                </li>
+              )}
+              {/* 入力内容をループで表示 */}
+              {todoTasks.map(data => (
+                <li className="task" key={data.id}>
+                  <div className="Todocell">
+                    {/* 進捗バー */}
+                    <div className="Situation-green">
+                      <h4 className="Situation-Title">進行中</h4>
+                      <button id="btn_menu" className="btn_menu">
+                        <span><span></span></span>
+                      </button>
+                    </div>
+                    {/* 内容 */}
+                    <div className="list-1">
+                      <label className="my-taskcheck">
+                        <input 
+                          type="checkbox" 
+                          className="taskcheck"
+                          onChange={() => handleCompleteTask(data.id)}
+                          checked={data.completed}
+                        />
+                        <span className="checkmark"></span>
+                        <div className="taskname">{data.taskname}</div>
+                      </label>
+                      <label className="my-datechoice">
+                        <IconContext.Provider value={{ size: '25px' }}>
+                          <FaRegCalendarAlt className="day-input-icon" />
+                        </IconContext.Provider>
+                        <DatePicker
+                            className="day-input"
+                            selected={data.endday ? new Date(data.endday) : null}
+                            onChange={(date) => handleDateChange(date, data.id)}
+                            dateFormat="yyyy/MM/dd"
+                            placeholderText="日付を選択"
+                            portalId="root" // 必須: ポップアップがbody直下に配置される
+                            popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
+                            popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
+                          />
+                      </label>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {/* 完了済エリア */}
+            <ul className="taskmanager2">
+              {completedTasks.map(data => (
+                <li className="task" key={data.id}>
+                  <div className="Todocell">
+                      {/* 進捗バー */}
+                      <div className="Situation-blue">
+                        <h4 className="Situation-Title">完了済み</h4>
+                        <button id="btn_menu" className="btn_menu">
+                            <span><span></span></span>
+                        </button>
+                      </div>
+                      {/* 内容 */}
+                      <div className="list-1">
+                        <label className="my-taskcheck">
+                            <input 
+                              type="checkbox" 
+                              className="taskcheck"
+                              onChange={() => handleCompleteTask(data.id)}
+                              checked={data.completed}
+                            />
+                            <span className="checkmark"></span>
+                            <div className="taskname">{data.taskname}</div>
+                        </label>
+                        <label className="my-datechoice">
+                          <IconContext.Provider value={{ size: '25px' }}>
+                            <FaRegCalendarAlt className="day-input-icon" />
+                          </IconContext.Provider>
+                        </label>
+                        {data.endday && (
+                          <div className="endday">
+                            {new Date(data.endday).toLocaleDateString("ja-JP")}
+                          </div>
+                        )}
+                     </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
