@@ -9,10 +9,7 @@ import { FaRegCalendarAlt } from "react-icons/fa"; // カレンダーアイコ�
 
 function App() {
   const [tasks, setTasks] = useState([]);                       // 進行中タスクの状況を管理
-  const [endtasks, setEndTasks] = useState([]);                 // 完了済みタスクの状況を管理
   const [newTaskName, setNewTaskName] = useState('');           // 新規作成するタスク名を管理
-  const [isChecked, setIsChecked] = useState(false);            // チェックボックスの状態を管理
-  const [endday, setEndday] = useState('');                     // タスクの終了日を管理
   const [time, setTime] = useState(new Date());                 // 現在時刻を管理
   const [selectedDate, setSelectedDate] = useState(null);       // DatePickerを管理
   const [isPopupVisible, setIsPopupVisible] = useState(false);  // ポップアップの表示・非表示を管理
@@ -55,29 +52,23 @@ function App() {
 
 /*================================================================================*/
   // ポップアップ処理 //
-
-  const openPopup = () => { // ポップアップを開く
-      setIsPopupVisible(true); 
-  };
-  const closePopup = () => { // ポップアップを閉じる
-      setIsPopupVisible(false); 
-  };
+  const openPopup = () => {setIsPopupVisible(true)};    // ポップアップを開く
+  const closePopup = () => {setIsPopupVisible(false)};  // ポップアップを閉じる
 
   /*================================================================================*/
   // カレンダーPopup //
   
-  const handleDateChange = (date) => { // 日付選択できる処理
-    setSelectedDate(date);  // 選択した日付を保存
-  };
-  const handleError = (error) => {
-    console.error("エラーが発生しました:", error);
-  };
+  const handleDateChange = (date, id) => { // 日付選択した時の処理
+    setTasks(tasks.map(task =>
+        task.id === id ? { ...task, endday: date ? date.toISOString() : null } : task
+    ));
+};
 
 /*================================================================================*/
   // タスク処理 //
 
   // 新規作成処理 //
-  const handAddTask = () => { // 新しくタスクを追加する処理
+  const handleAddTask = () => { 
     if (newTaskName.trim() === '') return; // 空の場合は追加しない
     const myId = uuidv4(); // Taskのidを作成
 
@@ -85,40 +76,33 @@ function App() {
     const newTask = {           
       id: myId,                                                 // idを設定
       taskname: newTaskName,                                    // タスク名を設定
-      startday: "",                                             // 開始日を設定
+      startday: new Date().toISOString(),                       // 開始日を設定
       endday: selectedDate ? selectedDate.toISOString() : null, // 終了日を設定
       contents: "",                                             // タスクの内容を設定
       other: "",                                                // その他を設定
       completed: false,                                         // タスクの完了状態を設定
     }
-    setTasks([...tasks, newTask]); // タスクを追加
-
-    // 入力欄をクリア
-    setNewTaskName(''); 
-    setEndday(''); 
-    setSelectedDate(null); 
-
-    closePopup(); // 追加後ポップアップを閉じる
+    setTasks([...tasks, newTask]);  // タスクを追加
+    setNewTaskName('');             // タスク名入力欄をクリア
+    setSelectedDate(null);          // 終了日入力欄をクリア
+    closePopup();                   // 追加後ポップアップを閉じる
   };
 
   //　タスク完了処理
   const handleCompleteTask = (id) => {
     setTasks(
-        tasks.map((task) =>
-            task.id === id ? { ...task, completed: !task.completed } : task // 値を反転
-            // true→false、false→trueに変更される(データ型のみ？)
-        )
+      tasks.map((task) =>
+          task.id === id ? { ...task, completed: !task.completed } : task // 値を反転
+          // true→false、false→trueに変更される(データ型のみ？)
+      )
     );
   };
 
-  const completedTasks = tasks.filter(task => task.completed);
-
-
+  // 進行中のタスクを取得
   const todoTasks = tasks.filter(task => !task.completed);
 
-
-  // Taskの進捗中・完了済みを管理
-  const [todos, setTodos] = useState([]);
+  // 完了済のタスクを取得
+  const completedTasks = tasks.filter(task => task.completed);
 
   {/* HTMLを表示する */}
   return (
@@ -130,14 +114,16 @@ function App() {
             <div className="time-display">{formatTime(time)}</div>
             <div className="date-display">{formatDate(time)}</div>
           </div>
+          <button className="btn0" onClick={openPopup}>タスクを追加</button>
+          <div className="Title-area" >
+            <h3>To Do</h3>
+            <h3>Complete</h3>
+          </div>
         </div>
         <div className="body-area">
-          <h1>タスク一覧</h1>
-          <button className="btn0" onClick={openPopup}>タスクを追加</button>
           <div className="list-area">
               {/* 進行中エリア */}
               <ul className="taskmanager">
-                  <h3>To Do</h3>
                   {/* task新規作成Popup */}
                   {isPopupVisible && (
                       <li className="task">
@@ -168,22 +154,23 @@ function App() {
                                     </IconContext.Provider>
                                     <DatePicker
                                         className="day-input"
-                                        selected={selectedDate}
-                                        onChange={handleDateChange}
-                                        onError={handleError}
                                         dateFormat="yyyy/MM/dd"
+                                        selected={selectedDate}
+                                        onChange={(date) => setSelectedDate(date)}
                                         locale="ja"
                                         placeholderText="日付を選択"
+                                        portalId="root" // 必須: ポップアップがbody直下に配置される
+                                        popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
                                         popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
                                       />
                                   </label>
+                                  <button onClick={handleAddTask}>登録</button>
                               </div>
-                              <button onClick={handAddTask}>登録</button>
                           </div>
                       </li>
                   )}
                   {/* 入力内容をループで表示 */}
-                  {tasks && tasks.map(data => (
+                  {todoTasks.map(data => (
                   <li className="task" key={data.id}>
                       <div className="Todocell">
                           {/* 進捗バー */}
@@ -211,13 +198,12 @@ function App() {
                                 </IconContext.Provider>
                                 <DatePicker
                                     className="day-input"
-                                    selected={selectedDate}
-                                    onChange={handleDateChange}
-                                    onError={handleError}
+                                    selected={data.endday ? new Date(data.endday) : null}
+                                    onChange={(date) => handleDateChange(date, data.id)}
                                     dateFormat="yyyy/MM/dd"
-                                    value={data.endday}
-                                    locale="ja"
                                     placeholderText="日付を選択"
+                                    portalId="root" // 必須: ポップアップがbody直下に配置される
+                                    popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
                                     popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
                                   />
                               </label>
@@ -228,8 +214,7 @@ function App() {
               </ul>
               {/* 完了済エリア */}
               <ul className="taskmanager">
-                  <h3>Complete</h3>
-                  {endtasks && endtasks.map(data => (
+                  {completedTasks.map(data => (
                     <li className="task" key={data.id}>
                         <div className="Todocell">
                             {/* 進捗バー */}
@@ -255,18 +240,12 @@ function App() {
                                   <IconContext.Provider value={{ size: '25px' }}>
                                     <FaRegCalendarAlt className="day-input-icon" />
                                   </IconContext.Provider>
-                                  <DatePicker
-                                      className="day-input"
-                                      selected={selectedDate}
-                                      onChange={handleDateChange}
-                                      onError={handleError}
-                                      dateFormat="yyyy/MM/dd"
-                                      value={data.endday}
-                                      locale="ja"
-                                      placeholderText="日付を選択"
-                                      popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
-                                    />
                                 </label>
+                                {data.endday && (
+                                  <div className="endday">
+                                    {new Date(data.endday).toLocaleDateString("ja-JP")}
+                                  </div>
+                                )}
                             </div>
                         </div>
                     </li>

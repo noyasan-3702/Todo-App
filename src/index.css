@@ -123,7 +123,16 @@ body {
 
 /* 中身のレイアウト*/
 .body-area {
-  margin-top: 200px;
+  margin-top: 265px;
+}
+.Title-area {
+  display: flex;
+  flex-wrap: wrap; /* 折り返したいんだ！ */
+  width: 100%;
+}
+.Title-area h3 {
+  margin: 0 auto;
+  width: 50%;
 }
 
 /*================================================================================*/
@@ -337,7 +346,7 @@ body {
 .task {
   width : 100%;
   list-style: none;  /* リストマーク（・）を消す */
-  margin: 5px 5px 55px 5px;
+  margin: 5px 5px 30px 5px;
 }
 
 /* Todoリストのレイアウト */
@@ -416,9 +425,10 @@ body {
   text-align: left;
 }
 
-.day {
-  margin-left: 15px;
-  width: 100%;
+.endday {
+  margin-top: -32px;
+  margin-left: 45px;
+  font-size: 20px;
   text-align: left;
 }
 
@@ -427,7 +437,7 @@ body {
 .my-datechoice {
   display: block;
   position: relative;
-  margin: 1em 0;
+  margin: 1rem 0;
   cursor: pointer;
   user-select: none; /* テキストの選択を防ぐ */
 }
@@ -444,7 +454,7 @@ body {
   left: 43px;
 }
 .react-datepicker__input-container {
-  height: 50px;
+  height: 25px;
 }
 .react-datepicker-popper {
   position: absolute;
