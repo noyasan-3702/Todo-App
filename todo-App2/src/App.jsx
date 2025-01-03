@@ -147,10 +147,10 @@ function App() {
     );
   };
 
-  // 進行中のタスクを取得
+  // 進行中のタスクを取得する
   const todoTasks = tasks.filter(task => !task.completed);
 
-  // 完了済のタスクを取得
+  // 完了済のタスクを取得する
   const completedTasks = tasks.filter(task => task.completed);
 
   {/* HTMLを表示する */}
