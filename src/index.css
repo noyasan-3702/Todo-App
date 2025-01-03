@@ -462,13 +462,13 @@ body {
   top: -15px; /* 上からの位置 */
   left: 43px;
 }
-.react-datepicker__input-container {
+.react-datepicker_input-container {
   height: 25px;
 }
 .react-datepicker-popper {
   position: absolute;
   z-index: 9999; /* 他の要素に隠れないよう調整 */
-  top: 15px;        /* 必要に応じて位置を調整 */
+  top: 20px;        /* 必要に応じて位置を調整 */
   left: 0;
 }
 
@@ -580,4 +580,3 @@ body {
 .btn:active {
   transform: scale(0.95);
 }
-
