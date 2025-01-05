@@ -1,23 +1,25 @@
-import React from "react";
-import DatePicker from 'react-datepicker';
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import 'react-datepicker/dist/react-datepicker.css';
-import './App.css';
 import { IconContext } from 'react-icons'; //IconContextをインポート
 import { FaRegCalendarAlt } from "react-icons/fa"; // カレンダーアイコンの呼び出し
+import DatePicker, { registerLocale }  from "react-datepicker";
+import 'react-datepicker/dist/react-datepicker.css';
+import ja from 'date-fns/locale/ja';
+import './App.css';
 
+/*================================================================================*/
 function App() {
-  const [tasks, setTasks] = useState([]);                       // 進行中タスクの状況を管理
-  const [newTaskName, setNewTaskName] = useState('');           // 新規作成するタスク名を管理
-  const [time, setTime] = useState(new Date());                 // 現在時刻を管理
-  const [selectedDate, setSelectedDate] = useState(null);       // DatePickerを管理
-  const [isPopupVisible, setIsPopupVisible] = useState(false);  // 新規popupの表示・非表示を管理
-  const [buttons, setButtons] = useState([{}]);                 // 各メニューボタンの挙動を管理
-  const [popups, setPopups] = useState({});                     // メニューpopupの表示・非表示を管理
-  const popupRefs = useRef({});                                 // ポップアップの参照を保持
+  const [tasks, setTasks] = useState([]);                             // 進行中タスクの状況を管理
+  const [newTaskName, setNewTaskName] = useState('');                 // 新規作成するタスク名を管理
+  const [time, setTime] = useState(new Date());                       // 現在時刻を管理
+  const [selectedDate, setSelectedDate] = useState();                 // DatePickerを管理
+  const [formDate, setFormDate] = useState(new Date());               // 日付の初期値を設定
+  const [isAddPopupVisible, setIsAddPopupVisible] = useState(false);  // メニューpopupの表示・非表示を管理
+  const popupRefs = useRef({});                                       // ポップアップの参照を保持
+  const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);// 編集popupの表示・非表示を管理
+  const [editedTask, setEditedTask] = useState('');
 
-  /*================================================================================*/
+/*================================================================================*/
   // 現在時刻表示レイアウト //
 
   useEffect(() => { // 毎秒現在時刻を更新する処理
@@ -45,7 +47,7 @@ function App() {
     });
   };
 
-
+/*================================================================================*/
   // ローカルストレージに一時保存された問い合わせ内容を配列形式で取得
   const [formDataList, setFormDataList] = useState([]);
   useEffect(() => {
@@ -57,59 +59,65 @@ function App() {
   // メニューPopup //
 
   // ボタンがクリックされたらメニューPopupを表示
-  const handlemenuButtonClick = useCallback((buttonId) => { 
-    console.log('ボタンがクリックされました！');
-    setPopups((prevPopups) => ({
-      ...prevPopups,                      // 「Popups」オブジェクトのプロパティをコピー
-      [buttonId]: !prevPopups[buttonId],  // キー(id)が見つかったら、Popupの表示・非表示の値（true/false）を反転して更新
-    }));
-  }, []);
-
-  // 新しいメニューボタンが追加されたら新規のidを付与
-  const handleAddmenuButton = () => {
-    const newButton = { id: uuidv4(), label: `ボタン${buttons.length + 1}` }; //「newButton」としてidを作成
-    setButtons([...buttons, newButton]);  // 配列内に新規発行したidを追加
+  const handleMenuButtonClick = (id) => {
+    const button = document.getElementById('btn_menu');
+    button.classList.toggle('active');
+  
+    setTasks(prevTasks => prevTasks.map(task => {
+        if (task.id === id) {
+          return {
+            ...task,
+            isMenuOpen: button.classList.contains('active')
+          };
+        }
+        return task;
+      })
+    );
   };
 
-  // メニューPopupの外側がクリックされたかどうかを判定
-  const handleClickOutside = useCallback((event, buttonId) => {
-    console.log('Popupを閉じました');
-    // キー(id)に対応したPopupが表示されていて、そのPopupの要素以外がクリックされたら？に対応したPopupが表示されていて、そのPopupの要素以外がクリックされたら？
-    if (popups[buttonId] && popupRefs.current[buttonId] && !popupRefs.current[buttonId].contains(event.target)) {
-      setPopups((prevPopups) => ({
-        ...prevPopups,      // 「Popups」オブジェクトのプロパティをコピー
-        [buttonId]: false,  // Popupの状態をfalse(非表示)に更新
-      }));className="my-taskcheck"
-    }
-  }, [popups]);
-  // contains()メソッドはあるDOM要素が別のDOM要素を含んでいるかどうかをチェックする
+//   // メニューPopupの外側がクリックされたかどうかを判定
+//   const handleGlobalClick = useCallback((event, id) => {
+//     console.log('Popupを閉じました');
+//     // キー(id)に対応したPopupが表示されていて、そのPopupの要素以外がクリックされたら？
+//     // また、対応したPopupが表示されていて、そのPopupの要素以外がクリックされたら？
+//     if (popupRefs.current[id] && !popupRefs.current[id].contains(event.target)) {
+//       setTasks(prevTasks => prevTasks.map(task =>
+//         task.id === id ? {...task, isMenuOpen: false} : task
+//       ));
+//     }
+//   }, []);
+//   // contains()メソッドはあるDOM要素が別のDOM要素を含んでいるかどうかをチェックする
 
+//   useEffect(() => {
+//     const handleGlobalClick = (event) => {
+//       setTasks(prevTasks => prevTasks.map(task => { // ★重要な修正
+//           if (task.isMenuOpen && popupRefs.current[task.id] && !popupRefs.current[task.id].contains(event.target)) {
+//             return { ...task, isMenuOpen: false };
+//           }
+//           return task;
+//       }));
+//     };
 
-  useEffect(() => {
-    const handleGlobalClick = (event) => {
-        for (const buttonId in popups) {
-            handleClickOutside(event, buttonId);
-        }
-    };
-    document.addEventListener('mousedown', handleGlobalClick);
-    return () => {
-      document.removeEventListener('mousedown', handleGlobalClick);
-    };
-  }, [handleClickOutside, popups]);
+//     document.addEventListener('mousedown', handleGlobalClick);
+//     return () => document.removeEventListener('mousedown', handleGlobalClick);
+// }, [popupRefs]);
 
   /*================================================================================*/
   // カレンダーPopup //
   
-  const handleDateChange = (date, id) => { // 日付選択した時の処理
-    setTasks(tasks.map(task =>
-        task.id === id ? { ...task, endday: date ? date.toISOString() : null } : task
-    ));
-};
+  const handleDateChange = (date, id) => {
+    setTasks(prevTasks => prevTasks.map(task => {
+      if (task.id === id) {
+        return { ...task, endday: date ? date.toISOString() : null };
+      }
+      return task;
+    }));
+  }
 /*================================================================================*/
   // 新規作成Popup //
 
-  const openAddPopup = () => {setIsPopupVisible(true)};    // ポップアップを開く
-  const closeAddPopup = () => {setIsPopupVisible(false)};  // ポップアップを閉じる
+  const openAddPopup = () => {setIsAddPopupVisible(true)};    // ポップアップを開く
+  const closeAddPopup = () => {setIsAddPopupVisible(false)};  // ポップアップを閉じる
 
 /*================================================================================*/
   // タスク処理 //
@@ -117,24 +125,29 @@ function App() {
   // 新規作成処理 //
   const handleAddTask = () => { 
     if (newTaskName.trim() === '') return; // 空の場合は追加しない
-    const myId = uuidv4(); // Taskのidを作成
 
     // 新規作成するタスクの各項目の初期値を設定
     const newTask = {           
-      id: myId,                                                 // idを設定
-      taskname: newTaskName,                                    // タスク名を設定
-      startday: new Date().toISOString(),                       // 開始日を設定(今日の日付)
-      endday: selectedDate ? selectedDate.toISOString() : null, // 終了日を設定(カレンダーPopupで選択された日付)
-      contents: "",                                             // タスクの内容を設定
-      other: "",                                                // その他を設定
-      completed: false,                                         // タスクの完了状態を設定
+      id: uuidv4(),                                     // idを設定
+      taskname: newTaskName,                            // タスク名を設定
+      startday: new Date().toISOString(),               // 開始日を設定(今日の日付)
+      endday: formDate ? formDate.toISOString() : null, // 終了日を設定(カレンダーPopupで選択された日付)
+      contents: "",                                     // タスクの内容を設定
+      other: "",                                        // その他を設定
+      completed: false,                                 // タスクの完了状態を設定
+      isMenuOpen: false,                                // メニューPopupを非表示に設定
       // ISO形式 - 例 2024-03-15T10:30:45.500Z(YYYY-MM-DDTHH:mm:ss.sssZ)
     }
     setTasks([...tasks, newTask]);  // タスクを追加
     setNewTaskName('');             // タスク名入力欄をクリア
     setSelectedDate(null);          // 終了日入力欄をクリア
-    handleAddmenuButton()           // メニューボタンにidを付与
     closeAddPopup();                // 追加後ポップアップを閉じる
+
+    // ログを表示
+    console.log(newTask.id)
+    console.log(newTask.taskname)
+    console.log(newTask.startday)
+    console.log(newTask.endday)
   };
 
   //　タスク完了処理
@@ -147,16 +160,52 @@ function App() {
     );
   };
 
+  // タスクを削除する処理
+  const handleDeleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  // タスクの内容を編集する処理
+  const handleEditTask = (id) => {
+    setIsEditPopupVisible(true); // 編集ポップアップを開く
+    setEditedTask(tasks.find(task => task.id === id)); // 編集対象のタスクの内容を初期値に設定
+  };
+
+  // 編集ポップアップを閉じる
+  const closeEditPopup = () => {setIsEditPopupVisible(false)};
+  
+  // 編集した内容を保存する処理
+  const handleSaveEdit = () => {
+
+    setIsEditPopupVisible(false) // 編集ポップアップを閉じる
+  };
+
   // 進行中のタスクを取得する
   const todoTasks = tasks.filter(task => !task.completed);
 
   // 完了済のタスクを取得する
   const completedTasks = tasks.filter(task => task.completed);
 
+/*================================================================================*/
   {/* HTMLを表示する */}
   return (
     <>
       <div className="Todo-container">
+        {/* task編集Popup */}
+        {isEditPopupVisible && (
+          <div className="popup">
+            {/* 編集フォーム */}
+            <form>
+              <label>
+                タスク名:
+                <input type="text" value={editedTask.taskname} onChange={(e) => setEditedTask({ ...editedTask, taskname: e.target.value })} />
+              </label>
+              {/* その他の項目も同様に */}
+            </form>
+            <button onClick={handleSaveEdit}>保存</button>
+            <button onClick={closeEditPopup}>キャンセル</button>
+          </div>
+        )}
         <div className="header-area">
           <h1 className="Title">ToDo App</h1>
           <div className="clock-area">
@@ -171,16 +220,10 @@ function App() {
         </div>
         <div className="body-area">
           <div className="list-area">
-            {/* メニュー 
-            <div>
-              <button>編集</button>
-              <button>削除</button>
-            </div>
-            */}
             {/* 進行中エリア */}
             <ul className="taskmanager1">
               {/* task新規作成Popup */}
-              {isPopupVisible && (
+              {isAddPopupVisible && (
                 <li className="task">
                   <div className="Todocell">
                     <div className="Situation-green">
@@ -207,17 +250,16 @@ function App() {
                         <IconContext.Provider value={{ size: '25px' }}>
                           <FaRegCalendarAlt className="day-input-icon" />
                         </IconContext.Provider>
-                        <DatePicker
-                            className="day-input"
-                            dateFormat="yyyy/MM/dd"
-                            selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)}
-                            locale="ja"
-                            placeholderText="日付を選択"
-                            portalId="root" // 必須: ポップアップがbody直下に配置される
-                            popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
-                            popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
-                          />
+                        <DatePicker 
+                          className="day-input"
+                          selected={formDate} // 初期値を設定(今日の日付)
+                          onChange={(selectedDate) => {setFormDate(selectedDate || formDate)}} // 日付変更時の処理
+                          minDate={new Date()} // 過去日を設定できないようにする
+                          dateFormat="yyyy/MM/dd"
+                          placeholderText="完了予定日を選択"
+                          portalId="root" // ポップアップがbody直下に配置される
+                          popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
+                        />
                       </label>
                       <button onClick={handleAddTask}>登録</button>
                     </div>
@@ -234,16 +276,18 @@ function App() {
                       <button 
                         id="btn_menu" 
                         className="btn_menu"
-                        onClick={() => handlemenuButtonClick(buttons.id)}
+                        onClick={() => handleMenuButtonClick(data.id)}
                       >
                         <span><span></span></span>
                       </button>
                     </div>
                     {/* メニューPopup */}
-                    {popups[buttons.id] && (
-                      <div className="menuPopup" ref={(el) => (popupRefs.current[buttons.id] = el)}>
-                        <p>これは{buttons.label}のポップアップです。</p>
-                        <p>共通のコンテンツを表示します。</p>
+                    {data.isMenuOpen && (
+                      <div 
+                        className="menuPopup" 
+                        ref={el => popupRefs.current[data.id] = el}>
+                        <label onClick={() => handleEditTask(data.id)}>●編集</label>
+                        <label onClick={() => handleDeleteTask(data.id)}>●削除</label>
                       </div>
                     )}
                     {/* 内容 */}
@@ -270,7 +314,6 @@ function App() {
                             placeholderText="日付を選択"
                             portalId="root" // 必須: ポップアップがbody直下に配置される
                             popperPlacement="bottom" // ポップアップの表示位置を明示的に設定
-                            popperContainer={({ children }) => <div>{children}</div>} // ポップアップを直下に表示
                           />
                       </label>
                     </div>
@@ -286,10 +329,20 @@ function App() {
                       {/* 進捗バー */}
                       <div className="Situation-blue">
                         <h4 className="Situation-Title">完了済み</h4>
-                        <button id="btn_menu" className="btn_menu">
+                        <button 
+                          id="btn_menu" 
+                          className="btn_menu"
+                          onClick={() => handleMenuButtonClick(data.id)}
+                        >
                             <span><span></span></span>
                         </button>
                       </div>
+                    {/* メニューPopup */}
+                    {data.isMenuOpen && (
+                      <div className="menuPopup" ref={el => popupRefs.current[data.id] = el}>
+                        <label onClick={() => handleDeleteTask(data.id)}>●削除</label>
+                      </div>
+                    )}
                       {/* 内容 */}
                       <div className="list-1">
                         <label className="my-taskcheck">
