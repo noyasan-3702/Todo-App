@@ -18,13 +18,15 @@ body {
 /*================================================================================*/
 
 /* メニューボタンのレイアウト */
-#btn_menu {
+#btn_menu,
+#btn_menu.initial {
 	position: relative;
 	display: flex;
   text-align: right;
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
+  cursor: pointer;
 	width: 25px;
 	height: 25px;
 	box-sizing: border-box;
@@ -33,6 +35,21 @@ body {
   border: none;
   border-radius: 10px;
 }
+
+#btn_menu.active {
+  margin-top: -4px;
+  margin-right: 0px;
+  padding: auto auto;
+  color: #ffffff;
+  background-color: #a3a3a3;
+  float: right;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+}
+
 #btn_menu::before {
 	position: absolute;
 	top: calc(50% - 1px);
@@ -105,9 +122,7 @@ body {
 /* ヘッター部分のレイアウト */
 .header-area {
   border-radius: 10px;
-  position: fixed; /* ヘッダーを固定する */
-  top: 20px; 
-  left: 0;
+  z-index: 9998;
   width: 100%;
 }
 
@@ -123,15 +138,21 @@ body {
 
 /* 中身のレイアウト*/
 .body-area {
-  margin-top: 265px;
+  margin-top: 0px;
 }
 .Title-area {
   display: flex;
   flex-wrap: wrap; /* 折り返したいんだ！ */
   width: 100%;
 }
-.Title-area h3 {
+.ToDo {
   margin: 0 auto;
+  margin-left: -30px;
+  width: 50%;
+}
+.Complete {
+  margin: 0 auto;
+  margin-right: 0px;
   width: 50%;
 }
 
@@ -156,70 +177,19 @@ body {
   text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
 }
 
-
 /*================================================================================*/
-/* お問い合わせフォームのレイアウト */
-.foam-area {
-  display:flex;
-  flex-wrap: wrap;
-  margin:0 auto;
-  width: 500px;
-  letter-spacing: 0.03rem;
+/* メニューポップアップのレイアウト */
+.menuPopup {
+  background: #FFF;
+  color: #000;
+  text-shadow: none;
+  border-bottom: 0.5px solid black;
 }
 
-/* 入力欄のレイアウト */
-.input-area1 {
-  margin:5px auto;
-  width:50%;
+.menuPopup label {
+  padding: 20px 20px;
+  cursor:pointer;
 }
-.input-area2 {
-  margin:5px auto;
-  width:50%;
-}
-.input-area3 {
-  margin:5px auto;
-  width:100%;
-}
-
-.input-area1 h3 {
-  color: #ffffff;
-  text-align:left;
-  margin-bottom: 5px;
-}
-.input-area2 h3 {
-  color: #ffffff;
-  text-align:left;
-  margin-bottom: 5px;
-  margin-left: 20px;
-}
-.input-area3 h3 {
-  color: #ffffff;
-  text-align:left;
-  margin-bottom: 5px;
-}
-
-.input1 {
-  float: left;
-  width:90%;
-  padding:1em;
-  color: #000000;
-  margin-left:0;
-}
-.input2 {
-  float: right;
-  width:80%;
-  padding:1em;
-  color: #000000;
-  margin-left:0;
-}
-.input3 {
-  float: left;
-  box-sizing: border-box;
-  width: 100%;
-  padding: 1em;
-  color: #000000;
-}
-
 
 /*================================================================================*/
 /* ポップアップのレイアウト */
@@ -233,18 +203,30 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+  z-index: 9998;
 }
 
 /* ポップアップ本体 */
-.popup {
+.popup-body {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 65%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border: 1px solid #ccc;
   color: #000;
-  background: #fff;
-  padding: 20px;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-shadow: none;
+}
+
+.popup {
+  border-radius: 10px;
+  overflow: hidden; /* 丸角の外にはみ出る部分を隠す */
+  background: none; /* 背景色は『なし』 */
+  border: none; /* 枠線なし */
 }
 
 /* 閉じるボタン */
@@ -262,7 +244,6 @@ body {
   border-radius: 10px;
 }
 .closebtn:hover,
-
 .closebtn:focus {
   color: #000;
   text-decoration: none;
@@ -338,24 +319,106 @@ body {
 }
 
 .taskmanager1 {
+  display: flex;
   width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
   border-radius: 10px; /* テーブル全体の角を丸くする */
   padding: 0px;
   margin-left: -15px;
   margin-right: 15px;
+  flex-wrap: wrap; /* 必要に応じて改行を許可 */
 }
 .taskmanager2 {
+  display: flex;
   width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
   border-radius: 10px; /* テーブル全体の角を丸くする */
   padding: 0px;
   margin-left: 38px;
   margin-right: -35px;
+  flex-wrap: wrap; /* 必要に応じて改行を許可 */
 }
-
-.task {
+.task  {
   width : 100%;
   list-style: none;  /* リストマーク（・）を消す */
+  margin-right: 20px;
   margin-bottom: 30px;
+}
+
+/* スマホ (最大767px) */
+@media (max-width: 767px) {
+  .taskmanager1 {
+    flex-direction: column; /* 縦並びにする */
+    align-items: center; /* 中央揃え */
+    border-radius: 10px; /* テーブル全体の角を丸くする */
+    padding: 0px;
+    margin-left: -15px;
+    margin-right: 15px;
+  }
+  .taskmanager2 {
+    flex-direction: column; /* 縦並びにする */
+    align-items: center; /* 中央揃え */
+    border-radius: 10px; /* テーブル全体の角を丸くする */
+    padding: 0px;
+    margin-left: 38px;
+    margin-right: -35px;
+  }
+  .task {
+    width: 90%; /* 幅を広げる */
+    list-style: none;  /* リストマーク（・）を消す */
+    margin: 10px 0; /* 上下のマージンのみ */
+    flex-basis: auto; /* 幅の自動調整をリセット */
+  }
+}
+
+/* タブレット (768px〜1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .taskmanager1 {
+    display: flex;
+    width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
+    border-radius: 10px; /* テーブル全体の角を丸くする */
+    padding: 0px;
+    margin-left: -15px;
+    margin-right: 15px;
+  }
+  .taskmanager2 {
+    display: flex;
+    width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
+    border-radius: 10px; /* テーブル全体の角を丸くする */
+    padding: 0px;
+    margin-left: 38px;
+    margin-right: -35px;
+  }
+  .task  {
+    width : 100%;
+    list-style: none;  /* リストマーク（・）を消す */
+    margin-right: 20px;
+    margin-bottom: 30px;
+  }
+}
+
+/* PC (1024px以上) */
+@media (min-width: 1024px) {
+  .taskmanager1 {
+    display: flex;
+    width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
+    border-radius: 10px; /* テーブル全体の角を丸くする */
+    padding: 0px;
+    margin-left: -15px;
+    margin-right: 15px;
+  }
+  .taskmanager2 {
+    display: flex;
+    width : calc(100% / 2.06); /* タスクは画面に２つずつ表示 */
+    border-radius: 10px; /* テーブル全体の角を丸くする */
+    padding: 0px;
+    margin-left: 38px;
+    margin-right: -35px;
+  }
+    .task  {
+        flex-basis: calc(50% - 20px); /* 2個並びにする */
+        list-style: none;  /* リストマーク（・）を消す */
+        margin-right: 20px;
+        margin-bottom: 30px;
+    }
 }
 
 /* Todoリストのレイアウト */
@@ -378,9 +441,9 @@ body {
   font-weight: bold;
   display: flex;
 }
-.Situation-red {
+.Situation-orange {
   color: #000;
-  background: #ff6753;
+  background: #ffbb3b;
   padding: 5px;
   text-align: center;
   text-shadow: none;
@@ -451,6 +514,12 @@ body {
   user-select: none; /* テキストの選択を防ぐ */
 }
 
+.my-datechoice-popup {
+  margin: 1rem 0;
+  cursor: pointer;
+  user-select: none; /* テキストの選択を防ぐ */
+}
+
 .day-input-icon {
   position: absolute;
   top: -15px; /* 上からの位置 */
@@ -462,13 +531,13 @@ body {
   top: -15px; /* 上からの位置 */
   left: 43px;
 }
-.react-datepicker_input-container {
+.react-datepicker__input-container {
   height: 25px;
 }
 .react-datepicker-popper {
   position: absolute;
   z-index: 9999; /* 他の要素に隠れないよう調整 */
-  top: 20px;        /* 必要に応じて位置を調整 */
+  top: 15px;        /* 必要に応じて位置を調整 */
   left: 0;
 }
 
