@@ -20,8 +20,12 @@ function App() {
   const [isEditPopupVisible, setIsEditPopupVisible] = useState(false);// 編集popupの表示・非表示を管理
   const [editedTask, setEditedTask] = useState(null);                 // 初期値をnullに変更
 
-/*================================================================================*/
-  // 現在時刻表示レイアウト //
+
+ /**
+ * 現在時刻表示
+ * 現在時刻表示の内部処理
+ */
+  // 現在時刻表示 //
 
   useEffect(() => { // 毎秒現在時刻を更新する処理
     const timer = setInterval(() => {
@@ -48,16 +52,11 @@ function App() {
     });
   };
 
-/*================================================================================*/
-  // ローカルストレージに一時保存された問い合わせ内容を配列形式で取得
-  const [formDataList, setFormDataList] = useState([]);
-  useEffect(() => {
-      const data = JSON.parse(localStorage.getItem("formDataList")) || [];
-      setFormDataList(data);
-  }, []);
 
-  /*================================================================================*/
-  // メニューPopup //
+ /**
+ * メニューPopup
+ * メニューPopupの内部処理
+ */
 
   // ボタンがクリックされたらメニューPopupを表示
   const handleMenuButtonClick = (id) => {
@@ -76,8 +75,11 @@ function App() {
     );
   };
 
-  /*================================================================================*/
-  // カレンダーPopup //
+
+ /**
+ * カレンダーPopup
+ * カレンダーPopupの内部処理
+ */
   
   // タスク進行中のDatePicker変更ハンドラ
   const handleDateChange = (date, id) => {
@@ -104,8 +106,11 @@ function App() {
     }
   }
 
-/*================================================================================*/
-  // 新規作成Popup //
+
+/**
+ * 新規作成Popup
+ * 新規作成Popupの内部処理
+ */
 
   // ポップアップを開く
   const openAddPopup = () => {setIsAddPopupVisible(true)};    
@@ -117,10 +122,13 @@ function App() {
     setIsAddPopupVisible(false)     
   };  
 
-/*================================================================================*/
-  // タスク処理 //
-  
-  // タスク新規作成時の制御処理
+
+/**
+ * タスク新規作成
+ * タスク新規作成処理
+ */
+
+  // タスク新規作成時の制御処理 //
   const handleTaskNameChange = (e) => {
     const inputValue = e.target.value;
     setNewTaskName(inputValue); // 入力値をstateにセット
@@ -132,20 +140,6 @@ function App() {
       setIsAddPopupVisible(false) // ポップアップを閉じる
     } else {
       setNameError(false); // エラー状態をfalseに
-    }
-  };
-
-  // タスク編集時の制御処理
-  const handleEditTaskNameChange = (e) => {
-    const inputValue = e.target.value;
-    handleChange(e); // handleChangeを呼び出す
-    if (inputValue.length > 20) {
-      setNameError(true);
-      alert("タスク名は20文字以内で入力してください。");
-      e.target.value = inputValue.slice(0, 20); // 入力文字数を制限
-      handleChange({target: {name: 'taskname', value: inputValue.slice(0, 20)}}); // 親コンポーネントのstateも更新
-    } else {
-      setNameError(false);
     }
   };
 
@@ -171,27 +165,22 @@ function App() {
     closeAddPopup();                // 追加後ポップアップを閉じる
   };
 
-  //　タスク完了処理
-  const handleCompleteTask = (id) => {
-    setTasks(
-      tasks.map((task) =>
-          task.id === id ? { ...task, completed: !task.completed } : task // 値を反転
-          // true→false、false→trueに変更される(データ型のみ？)
-      )
-    );
-  };
 
-  // タスクを削除する処理
-  const handleDeleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
-  };
+/**
+ * タスク編集
+ * タスク編集時の制御処理
+ */
 
-  // タスクの内容を編集する処理
-  const handleEditTask = (id) => {
-    const taskToEdit = (tasks.find(task => task.id === id)); // 編集対象のタスクの内容を初期値に設定
-    if (taskToEdit) { // taskToEditが存在するか確認
-      setEditedTask(taskToEdit); // 編集対象のタスクをセット
-      setIsEditPopupVisible(true); // 編集ポップアップを開く
+  const handleEditTaskNameChange = (e) => {
+    const inputValue = e.target.value;
+    handleChange(e); // handleChangeを呼び出す
+    if (inputValue.length > 20) {
+      setNameError(true);
+      alert("タスク名は20文字以内で入力してください。");
+      e.target.value = inputValue.slice(0, 20); // 入力文字数を制限
+      handleChange({target: {name: 'taskname', value: inputValue.slice(0, 20)}}); // 親コンポーネントのstateも更新
+    } else {
+      setNameError(false);
     }
   };
 
@@ -213,13 +202,53 @@ function App() {
     setEditingTaskId(null); // 編集中のタスクIDをリセット
   };
 
+
+/**
+ * タスク完了
+ * タスク完了時の処理
+ */
+
+  const handleCompleteTask = (id) => {
+    setTasks(
+      tasks.map((task) =>
+          task.id === id ? { ...task, completed: !task.completed } : task // 値を反転
+          // true→false、false→trueに変更される(データ型のみ？)
+      )
+    );
+  };
+
+
+/**
+ * タスク削除
+ * タスク削除時の処理
+ */
+
+  const handleDeleteTask = (id) => {
+    setTasks(tasks.filter(task => task.id !== id));
+  };
+
+  // タスクの内容を編集する処理
+  const handleEditTask = (id) => {
+    const taskToEdit = (tasks.find(task => task.id === id)); // 編集対象のタスクの内容を初期値に設定
+    if (taskToEdit) { // taskToEditが存在するか確認
+      setEditedTask(taskToEdit); // 編集対象のタスクをセット
+      setIsEditPopupVisible(true); // 編集ポップアップを開く
+    }
+  };
+
+
+/**
+ * タスク表示
+ * タスク表示の処理
+ */
+
   // 進行中のタスクを取得する
   const todoTasks = tasks.filter(task => !task.completed);
 
   // 完了済のタスクを取得する
   const completedTasks = tasks.filter(task => task.completed);
 
-/*================================================================================*/
+
   {/* HTMLを表示する */}
   return (
     <>
