@@ -59,16 +59,13 @@ function App() {
  */
 
   // ボタンがクリックされたらメニューPopupを表示
-  const handleMenuButtonClick = (id) => {
-    const button = document.getElementById('btn_menu');
-    button.classList.toggle('active');
+  const handleMenuButtonClick = (event,id) => {
+    event.preventDefault(); // デフォルトのイベントをキャンセル
   
     setTasks(prevTasks => prevTasks.map(task => {
         if (task.id === id) {
           return {
-            ...task,
-            isMenuOpen: button.classList.contains('active')
-          };
+            ...task, isMenuOpen: !task.isMenuOpen }; // isMenuOpenを反転
         }
         return task;
       })
@@ -135,7 +132,7 @@ function App() {
     if (inputValue.length > 20) {
       setNameError(true); // エラー状態をtrueに
       alert("タスク名は20文字以内で入力してください。");
-      setNewTaskName(inputValue.slice(0, 20));//20文字で入力を制限
+      setNewTaskName(inputValue.slice(0, 20));  //20文字で入力を制限
       setNewTaskName('')
       setIsAddPopupVisible(false) // ポップアップを閉じる
     } else {
@@ -396,9 +393,9 @@ function App() {
                         {data.taskname === "誕生日" ? "★進行中★" : "進行中"} {/* タイトル条件分岐 */}
                       </h4>
                       <button 
-                        id="btn_menu" 
-                        className="btn_menu"
-                        onClick={() => handleMenuButtonClick(data.id)}
+                        id={`btn_menu_${data.id}`} // UUIDを使ったID生成
+                        className={`btn_menu ${data.isMenuOpen ? 'active' : ''}`} // isMenuOpenでactiveクラスを制御
+                        onClick={(event) => handleMenuButtonClick(event, data.id)} // eventとidを渡す
                       >
                         <span><span></span></span>
                       </button>
@@ -452,9 +449,9 @@ function App() {
                       <div className="Situation-blue">
                         <h4 className="Situation-Title">完了済み</h4>
                         <button 
-                          id="btn_menu" 
-                          className="btn_menu"
-                          onClick={() => handleMenuButtonClick(data.id)}
+                          id={`btn_menu_${data.id}`} // UUIDを使ったID生成
+                          className={`btn_menu ${data.isMenuOpen ? 'active' : ''}`} // isMenuOpenでactiveクラスを制御
+                          onClick={(event) => handleMenuButtonClick(event, data.id)} // eventとidを渡す
                         >
                             <span><span></span></span>
                         </button>
